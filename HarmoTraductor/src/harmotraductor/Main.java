@@ -4,6 +4,7 @@
  */
 
 package harmotraductor;
+
 import java.io.*;
 import java.util.*;
 /**
@@ -23,6 +24,22 @@ public class Main {
         salida = f.list();
         String archivo = dir+salida[0];
 
+
+          /*   int i = 0;
+
+        for(i=0;i<salida.length;i++)
+        {
+            File r = new File(dir+salida[i]);
+            if(r.isDirectory())
+            {
+                System.out.println("<DIR>"+salida[i]);
+            }
+ else
+            {
+                System.out.println("<FILE>"+salida[i]);
+
+            }
+        }*/
 
         try{
         FileReader cabezal = new FileReader(archivo);
@@ -62,21 +79,7 @@ public class Main {
 
 
 
-  /*      int i = 0;
 
-        for(i=0;i<salida.length;i++)
-        {
-            File r = new File(dir+salida[i]);
-            if(r.isDirectory())
-            {
-                System.out.println("<DIR>"+salida[i]);
-            }
- else
-            {
-                System.out.println("<FILE>"+salida[i]);
-
-            }
-        }*/
     }
 
 }
