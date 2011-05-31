@@ -11,11 +11,26 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.TextField.*;
 import javax.swing.JFrame.*;
+import javax.swing.BoxLayout.*;
 /**
  *
  * @author alu03009
  */
+class miJLabel extends JLabel
+{
+    int numinterno;
+    miJLabel()
+    {
+        super();
+        numinterno = 0;
+    }
 
+    miJLabel(int a)
+    {
+        super();
+        numinterno = a;
+    }
+}
 
 
 class formulario extends JFrame
@@ -23,8 +38,9 @@ class formulario extends JFrame
     JMenuBar barraMenu = new JMenuBar();
     JTextArea notastxt = new JTextArea(2,5);
     String texto = " ";
-    public ArrayList <JLabel> imnotas = new <JLabel> ArrayList(58);
-   
+    JPanel cajaNotas = new JPanel();
+    public ArrayList <miJLabel> imnotas = new <miJLabel> ArrayList(58);
+
 
     void crearimages(ArrayList a)
     {
@@ -33,7 +49,7 @@ class formulario extends JFrame
         System.out.println(a.size()+" "+imnotas.size());
         for(i=0;i<a.size();i++)
         {
-           imnotas.add(new JLabel(""));
+           imnotas.add(new miJLabel(((Nota)(a.get(i))).getnum()));
            (imnotas.get(i)).setIcon(new ImageIcon(((Nota)(a.get(i))).getpath()));
         }
     }
@@ -43,19 +59,42 @@ class formulario extends JFrame
              notastxt.setText(a) ;
        }
 
-    void cargar()
+    void cargar(Partitura a)
     {
-        notastxt.setLineWrap(true);
-        this.setLayout(new FlowLayout());
-        this.add(notastxt);
+        //notastxt.setLineWrap(true);
+        this.setLayout(new BorderLayout());
+        this.add(notastxt, BorderLayout.NORTH);
         this.setJMenuBar(barraMenu);
+        this.add(cajaNotas, BorderLayout.CENTER);
+        cajaNotas.setLayout(new GridLayout(a.filasCancion(),a.columnasCancion()));
+        //cajaNotas.setLayout(new FlowLayout());
+        System.out.println("Columnas"+a.columnasCancion());
+        System.out.println("Filas"+a.filasCancion());
         int j = 0;
-        for(j=0;j<imnotas.size();j++)
+        int actual = 0;
+        for(j=1;j<imnotas.size();j++)
         {
+            
             System.out.println("anadido icon - "+j);
-            this.add(imnotas.get(j));
+            if(imnotas.get(j).numinterno==120&&actual!=0)
+            {
+                for(int alpha = actual;alpha<a.columnasCancion();alpha++)
+                {
+                    cajaNotas.add(new JLabel(""));
+                    System.out.println("metida repetidamente"+imnotas.get(0).numinterno);
+                }
+                actual = 0;
+            }
+            else
+            {
+            cajaNotas.add(imnotas.get(j));
+            actual=actual+1;
+            System.out.println("Actual="+actual);
+            }
+            
+            
         }
-        this.setSize(400, 500);
+        this.setSize(1000, 600);
         this.setVisible(true);
     }
 }
@@ -127,7 +166,7 @@ public class Main {
         }
         form.crearimages(Cancion.notas);
         form.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        form.cargar();
+        form.cargar(Cancion);
 
 
     }
@@ -141,6 +180,41 @@ class Partitura
    public ArrayList <Nota> notas = new <Nota> ArrayList();
    public ArrayList letra = new ArrayList();
 
+   public int filasCancion()
+    {
+       int num = 0 ;
+       for(int i = 0; i<notas.size();i++)
+       {
+           if(((notas.get(i)).getnum())==(120))
+           {
+               num=num+1;
+           }
+
+       }
+     return (num-1);
+    }
+
+   public int columnasCancion()
+    {
+       int num = 0 ;
+       int numax = 0;
+       for(int i = 0; i<notas.size();i++)
+       {
+               if(((notas.get(i)).getnum())==120)
+               {
+                   num=0;
+               }
+              else
+               {
+                   num=num+1;
+                   if(num>=numax)
+                   {
+                       numax=num;
+                   }
+               }
+       }
+     return numax;
+   }
    public void addnota (int a)
     {
        System.out.println("anadida -> "+a);
@@ -198,6 +272,12 @@ class Nota
     public String getpath()
     {
         return imagename;
+    }
+
+
+    public int getnum()
+    {
+        return numeronota;
     }
 
     public String toString()
